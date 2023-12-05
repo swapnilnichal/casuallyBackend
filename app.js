@@ -1,8 +1,11 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const stripe = require('stripe')('sk_test_51OGxqwSA044I0aiR3ufe2jgVXP8MxpYRXg4htYhqsfBI9T61b9R0jx1D2HshYWqCinvyab5Jvn2w8KK9qWzztR0b00EkW0Y4Tm');
+require('dotenv').config();
+const secrete_api_code = process.env.secrete_api_code + "";
+const stripe = require('stripe')(secrete_api_code);
 const PORT = process.env.PORT || 7000;
+const base_Url = process.env.base_Url + ""  || "http://localhost:3000" ;
 
 app.use(express.json());
 app.use(cors());
@@ -25,8 +28,8 @@ app.post("/api/create-checkout-session", async(req,res)=>{
         payment_method_types : ["card"],
         line_items: lineItems,
         mode: 'payment',
-        success_url: `http://localhost:3000/success`,
-        cancel_url: `http://localhost:3000/cancel`,
+        success_url: `${base_Url}/success`,
+        cancel_url: `${base_Url}/cancel`,
       });
       res.json({id:session.id})
 })
